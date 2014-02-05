@@ -180,6 +180,16 @@ int main (int argc, char * const *argv)
         [server openFile:[files objectAtIndex:i] forceToFront:forceToFront];
     }
 
+    if (!manPath) {
+        FILE *fp;
+        char path[PATH_MAX];
+        fp = popen("/usr/bin/manpath", "r");
+        if (fp) {
+            manPath = [NSString stringWithCString:fgets(path, PATH_MAX, fp) encoding:NSUTF8StringEncoding];
+            pclose(fp);
+        }
+    }
+    
     if (manPath == nil && getenv("MANPATH") != NULL)
         manPath = [NSString stringWithCString:getenv("MANPATH")];
 
@@ -191,7 +201,6 @@ int main (int argc, char * const *argv)
         else
             [server openName:currFile section:section manPath:manPath forceToFront:forceToFront];
     }
-
     [pool release];
     exit(0);       // insure the process exit status is 0
     return 0;      // ...and make main fit the ANSI spec.

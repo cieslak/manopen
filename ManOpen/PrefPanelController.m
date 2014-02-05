@@ -23,6 +23,7 @@
 #import <AppKit/NSPopUpButton.h>
 #import "ManDocumentController.h"
 
+
 static NSColor *ColorForKey(NSString *key)
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -94,7 +95,20 @@ void RegisterManDefaults()
     NSString *manpath = @"/usr/local/man:/usr/man";
 #else
     NSString *nroff   = @"nroff -mandoc '%@'";
-    NSString *manpath = @"/usr/local/man:/usr/share/man";
+    FILE *fp;
+    char path[PATH_MAX];
+    fp = popen("/usr/bin/manpath", "r");
+    NSString *xcodeManpath = nil;
+    NSString *manpath = nil;
+    if (fp) {
+        xcodeManpath = [NSString stringWithCString:fgets(path, PATH_MAX, fp) encoding:NSUTF8StringEncoding];
+        pclose(fp);
+    }
+    if (xcodeManpath) {
+        manpath = xcodeManpath;
+    } else {
+        manpath = @"/usr/local/man:/usr/share/man";
+    }
 #endif
 
     if ([manager fileExistsAtPath:@"/sw/share/man"])

@@ -549,7 +549,7 @@ static NSCursor *linkCursor = nil;
     NSLayoutManager *layout    = [self layoutManager];
     NSTextStorage *storage     = [self textStorage];
     NSRect visible = [self visibleRect];
-    int currIndex = 0;
+    NSInteger currIndex = 0;
 
     [super resetCursorRects];
 
@@ -568,8 +568,8 @@ static NSCursor *linkCursor = nil;
         {
             NSRect *rects;
             NSRange ignoreRange = {NSNotFound, 0};
-            unsigned rectCount = 0;
-            int i;
+            NSUInteger rectCount = 0;
+            NSInteger i;
 
             rects = [layout rectArrayForCharacterRange:currRange
                             withinSelectedCharacterRange:ignoreRange
@@ -631,7 +631,8 @@ static NSCursor *linkCursor = nil;
     NSFont *font = ManFont();
     int currPage = [[NSPrintOperation currentOperation] currentPage];
     NSString *str = [NSString stringWithFormat:@"%d", currPage];
-    float strWidth = [font widthOfString:str];
+    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+    float strWidth = [str sizeWithAttributes:attribs].width;
     NSPoint point = NSMakePoint(size.width/2 - strWidth/2, 20.0);
 
 #ifdef MACOS_X

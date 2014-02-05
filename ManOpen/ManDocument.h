@@ -7,7 +7,7 @@
 #endif
 
 @class ManTextView;
-@class NSTextField, NSText, NSButton, NSPopUpButton;
+@class NSTextField, NSText, NSButton, NSPopUpButton, NSMutableArray;
 
 @interface ManDocument : NSDocument
 {
